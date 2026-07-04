@@ -223,20 +223,34 @@
   justify-content: center;
   align-items: center;
   width: 100%;      /* was 100vw */
-  height: 100vh;
-  padding: 0 40px;
+  flex: 1;
+  min-height: 0;
+  padding: 0 40px 24px;
   gap: 24px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
-.frame_selected img {
-  max-height: 90vh;
-  width: auto;
-  scale: 0.8;
+.frame_stage {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.frame_canvas {
+  display: block;
+  width: min(84vw, 640px);
+  height: auto;
+  max-height: calc(100svh - 118px);
+  object-fit: contain;
   align-self: center;
 }
 
 .frame_selected button {
+  position: absolute;
+  left: calc(100% + clamp(16px, 2vw, 24px));
+  top: 50%;
+  transform: translateY(-50%);
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -245,7 +259,24 @@
   cursor: pointer;
   font-size: 14px;
   flex-shrink: 0;
-  position: relative;
 }      
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-start;
+  min-height: 100svh;
+  padding: clamp(12px, 2vh, 20px) 20px 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.app h1 {
+  font-size: 2rem;
+  margin: 0 0 12px;
+  position: relative;
+}
 
 
