@@ -182,3 +182,70 @@
     border-right-color: var(--border);
   }
 }
+
+.frame-picker {
+  display: flex;
+  gap: 12px;
+}
+
+.frame-swatch {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  border: 2px solid #333;
+}
+
+
+.frame_options {
+  display: flex;
+  flex-wrap: wrap;       /* wraps to next line if they don't all fit */
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+.frame_options img {
+  width: 150px;          /* pick whatever size looks right */
+  height: auto;          /* keeps aspect ratio */
+  cursor: pointer;
+  border-radius: 8px;
+  scale: 1.0;
+  transition: scale 0.2s ease-in-out;
+}
+
+.frame_options :hover{
+  scale: 1.2;
+}
+
+.frame_selected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;      /* was 100vw */
+  height: 100vh;
+  padding: 0 40px;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+.frame_selected img {
+  max-height: 90vh;
+  width: auto;
+  scale: 0.8;
+  align-self: center;
+}
+
+.frame_selected button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #333;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  flex-shrink: 0;
+  position: relative;
+}      
+
+
