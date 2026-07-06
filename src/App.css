@@ -232,9 +232,24 @@
 }
 
 .frame_stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+.booth {
   position: relative;
   width: fit-content;
   max-width: 100%;
+  padding: 0;
+}
+
+.booth + .booth {
+  margin-left: clamp(-80px, -4vw, -24px);
 }
 
 .frame_canvas {
@@ -246,9 +261,10 @@
   align-self: center;
 }
 
-.frame_selected button {
-  position: absolute;
-  left: calc(100% + clamp(16px, 2vw, 24px));
+.frame_stage button {
+  position: relative;
+  display:flex;
+  gap:40px;
   top: 50%;
   transform: translateY(-50%);
   width: 80px;
@@ -259,7 +275,7 @@
   cursor: pointer;
   font-size: 14px;
   flex-shrink: 0;
-}      
+}
 
 .app {
   display: flex;
