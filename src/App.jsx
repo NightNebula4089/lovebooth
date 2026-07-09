@@ -7,7 +7,6 @@ function App() {
   const frameOptions = ["blue", "green", "red", "yellow"]
   const [selectedFrame, setSelectedFrame] = useState(null)
 
-
   return (
     <div className="app">
       <h1>Love booth </h1>
