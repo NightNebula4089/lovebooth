@@ -7,10 +7,10 @@ const SLOT_WIDTH = 953;
 const SLOT_HEIGHT = 599;
 
 const frameOptions = [
-    "/assets/frames/heart-frame.png",
-    "/assets/frames/heart-frame-2.png",
-    "/assets/frames/heart-frame-3.png",
-    "/assets/frames/heart-frame-4.png",
+    "${import.meta.env.BASE_URL}assets/frames/heart-frame.png",
+    "${import.meta.env.BASE_URL}assets/frames/heart-frame-2.png",
+    "${import.meta.env.BASE_URL}assets/frames/heart-frame-3.png",
+    "${import.meta.env.BASE_URL}assets/frames/heart-frame-4.png",
 ]
 
 function Frame({selectedFrame, onSelectFrame}){
