@@ -16,8 +16,8 @@ const frameOptions = [
 function Frame({selectedFrame, onSelectFrame}){
 
     const booth1Ref = useRef(null);
-    const localStream = useRef(null);
-    const remoteStream = useRef(null);
+    const [joineeStream, setJoineeStream] = useState(null);
+    const [hostStream, setHostStream] = useState(null);
     const booth2Ref = useRef(null);
     const [roomId, setRoomId] = useState(null);
     const [mode,setMode] = useState("selection"); // selection, host, join
@@ -42,6 +42,50 @@ function Frame({selectedFrame, onSelectFrame}){
                 setRoomId(roomId);
                 return roomId;
             }
+        }
+    }
+
+
+    const setupMediaStreams = async (role) => {
+        if(!pc.current) return
+        if(role == "host") {
+            // get local media stream 
+            const hostMediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            setHostStream(hostMediaStream)
+            const joineeMediaStream = new MediaStream()
+            setJoineeStream(joineeMediaStream)
+
+            //push tracks from local stream to peer connection
+            hostMediaStream.getTracks().forEach(track => {
+                pc.current.addTrack(track,hostMediaStream)
+            })
+
+            //pull tracks from remote stream, add to video stream 
+            pc.current.ontrack = (event) => {
+                event.streams[0].getTracks().forEach(track => {
+                    joineeMediaStream.addTrack(track)
+                })
+            }
+        } else if (role == "join") {
+            // get local media stream
+            const joineeMediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            setJoineeStream(joineeMediaStream)
+            const hostMediaStream = new MediaStream()
+            setHostStream(hostMediaStream)
+
+            //push tracks from local stream to peer connection
+            joineeMediaStream.getTracks().forEach(track => {
+                pc.current.addTrack(track,joineeMediaStream)
+            })
+
+            //pull tracks from remote stream, add to video stream 
+            pc.current.ontrack = (event) => {
+                event.streams[0].getTracks().forEach(track => {
+                    hostMediaStream.addTrack(track)
+                })
+            }
+        } else {
+            return
         }
     }
 
@@ -86,19 +130,21 @@ function Frame({selectedFrame, onSelectFrame}){
             pc.current.createDataChannel('rtc')
 
             // get local media stream 
-            // localStream.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-            // remoteStream.current = new MediaStream()
+            // hostStream.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            // joineeStream.current = new MediaStream()
 
-            // localStream.current.getTracks().forEach(track => {
-            //     pc.current.addTrack(track,localStream.current)
+            // hostStream.current.getTracks().forEach(track => {
+            //     pc.current.addTrack(track,hostStream.current)
             // })
 
             // pc.current.ontrack = event => {
             //     event.streams[0].getTracks().forEach(track => {
-            //         remoteStream.current.addTrack(track)
+            //         joineeStream.current.addTrack(track)
             //     })
             // }
             // Apply streams to video elements : inside the frames
+
+            await setupMediaStreams("host")
 
             // create a offer and set local description
             const offerDescription = await pc.current.createOffer()
@@ -189,6 +235,8 @@ function Frame({selectedFrame, onSelectFrame}){
             return;
         }
 
+        await setupMediaStreams("join")
+
         setRoomId(roomIdInput)
 
         const answerCandidatesRef = collection(db, "rooms", roomIdInput, "answer_candidates");
@@ -258,8 +306,8 @@ function Frame({selectedFrame, onSelectFrame}){
     return (
         <div className='frame_selected'>
             <div className="frame_stage">
-                <Booth ref={booth1Ref} selectedFrame={selectedFrame} label="Frame_you" />
-                <Booth ref={booth2Ref} selectedFrame={selectedFrame} label="Frame_friend" />
+                <Booth ref={booth1Ref} selectedFrame={selectedFrame} stream = {hostStream} label="Frame_you" />
+                <Booth ref={booth2Ref} selectedFrame={selectedFrame} stream = {joineeStream} label="Frame_friend" />
                 <button type="button" onClick={handleCapture} aria-label="Capture both frames">
                 </button>
                 <h2 className='room_key'>Room key: {roomId}</h2>

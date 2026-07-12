@@ -3,7 +3,7 @@ import { forwardRef, useImperativeHandle,useEffect, useRef, useState } from 'rea
 const SLOT_WIDTH = 953
 const SLOT_HEIGHT = 599
 
-const Booth = forwardRef(({ selectedFrame, label }, ref) => {
+const Booth = forwardRef(({stream, selectedFrame, label }, ref) => {
 
     const canvasRef = useRef(null)
     const frameImgRef = useRef(null)
@@ -19,30 +19,37 @@ const Booth = forwardRef(({ selectedFrame, label }, ref) => {
     const [frameLoaded,setFrameLoaded] = useState(false);
 
     useEffect(() => {
-        if(!selectedFrame) return;
-
-        const camCanvas = document.createElement('canvas')
-        camCanvas.width = 640
-        camCanvas.height = 480
-        const ctx = camCanvas.getContext('2d')
-
-        let hue = 0
-        let animationId
-        const draw = () => {
-        hue = (hue + 1) % 360
-        ctx.fillStyle = `hsl(${hue}, 70%, 50%)`
-        ctx.fillRect(0, 0, camCanvas.width, camCanvas.height)
-        ctx.fillStyle = 'white'
-        ctx.font = '30px sans-serif'
-        ctx.fillText(new Date().toLocaleTimeString(), 50, 240)
-        animationId = requestAnimationFrame(draw)
+        if(!videoRef.current || !stream) return
+        if(videoRef.current.srcObject !== stream) {
+            videoRef.current.srcObject = stream
         }
-        draw()
+    }, [stream])
 
-        videoRef.current.srcObject = camCanvas.captureStream(30)
+    // useEffect(() => {
+    //     if(!selectedFrame) return;
 
-        return () => cancelAnimationFrame(animationId)
-    },[selectedFrame])
+    //     const camCanvas = document.createElement('canvas')
+    //     camCanvas.width = 640
+    //     camCanvas.height = 480
+    //     const ctx = camCanvas.getContext('2d')
+
+    //     let hue = 0
+    //     let animationId
+    //     const draw = () => {
+    //     hue = (hue + 1) % 360
+    //     ctx.fillStyle = `hsl(${hue}, 70%, 50%)`
+    //     ctx.fillRect(0, 0, camCanvas.width, camCanvas.height)
+    //     ctx.fillStyle = 'white'
+    //     ctx.font = '30px sans-serif'
+    //     ctx.fillText(new Date().toLocaleTimeString(), 50, 240)
+    //     animationId = requestAnimationFrame(draw)
+    //     }
+    //     draw()
+
+    //     videoRef.current.srcObject = camCanvas.captureStream(30)
+
+    //     return () => cancelAnimationFrame(animationId)
+    // },[selectedFrame])
 
    
     useEffect(()=>{
