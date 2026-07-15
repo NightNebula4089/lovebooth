@@ -123,6 +123,9 @@ const Booth = forwardRef(({stream, selectedFrame, label }, ref) => {
     const capturePhoto = () => {
 
         if(photoCountRef.current >= 4 || !videoRef.current) return
+
+        const video = videoRef.current
+
         const tempCanvas = document.createElement('canvas')
         tempCanvas.width = SLOT_WIDTH
         tempCanvas.height = SLOT_HEIGHT
@@ -134,7 +137,7 @@ const Booth = forwardRef(({stream, selectedFrame, label }, ref) => {
         const offsetX = (SLOT_WIDTH - drawW) / 2
         const offsetY = (SLOT_HEIGHT - drawH) / 2
 
-        ctx.drawImage(videoRef.current, offsetX, offsetY, drawW, drawH)
+        ctx.drawImage(video, offsetX, offsetY, drawW, drawH)
 
         const img = new Image()
         img.src = tempCanvas.toDataURL('image/png')
