@@ -126,7 +126,15 @@ const Booth = forwardRef(({stream, selectedFrame, label }, ref) => {
         const tempCanvas = document.createElement('canvas')
         tempCanvas.width = SLOT_WIDTH
         tempCanvas.height = SLOT_HEIGHT
-        tempCanvas.getContext('2d').drawImage(videoRef.current,0,0,tempCanvas.width,tempCanvas.height)
+        const ctx = tempCanvas.getContext('2d')
+
+        const scale = Math.max(SLOT_WIDTH / video.videoWidth, SLOT_HEIGHT / video.videoHeight)
+        const drawW = video.videoWidth * scale
+        const drawH = video.videoHeight * scale
+        const offsetX = (SLOT_WIDTH - drawW) / 2
+        const offsetY = (SLOT_HEIGHT - drawH) / 2
+
+        ctx.drawImage(videoRef.current, offsetX, offsetY, drawW, drawH)
 
         const img = new Image()
         img.src = tempCanvas.toDataURL('image/png')
@@ -134,7 +142,7 @@ const Booth = forwardRef(({stream, selectedFrame, label }, ref) => {
             photosRef.current[photoCountRef.current] = img
             photoCountRef.current += 1
         }
-        console.log('Photo captured:', img.src)
+        
     }
 
     useImperativeHandle(ref, () => ({
