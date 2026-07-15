@@ -1,3 +1,10 @@
+@font-face{
+  font-family : "Inter";
+  font-style : normal;
+  font-weight : 400;
+  src: url("../../public/assets/fonts/Cantika\ Cute\ Handwriting.otf") format("opentype");
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -200,13 +207,12 @@
   display: flex;
   flex-wrap: wrap;       /* wraps to next line if they don't all fit */
   justify-content: center;
-  align-items: center;
   gap: 16px;
-  padding: 20px;
+  padding: 0;
 }
 
 .frame_options img {
-  width: 150px;          /* pick whatever size looks right */
+  width: clamp(100px, 25vw, 150px);          /* pick whatever size looks right */
   height: auto;          /* keeps aspect ratio */
   cursor: pointer;
   border-radius: 8px;
@@ -215,58 +221,55 @@
 }
 
 .frame_options :hover{
-  scale: 1.2;
-}
-
-.frame_selected {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;      /* was 100vw */
-  flex: 1;
-  min-height: 0;
-  padding: 0 40px 24px;
-  gap: 24px;
-  box-sizing: border-box;
-  overflow: hidden;
+  scale : 1.1;  /* slightly enlarge on hover */
 }
 
 .frame_stage {
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 0;
+  align-items: flex-start;
+  gap: clamp(12px, 4vw, 32px);
   width: 100%;
-  max-width: 100%;
-  flex-wrap: wrap;
+  flex: 1;
+  min-height: 0;   /* also needed here, so this row can shrink to fit available space */
 }
 
 .booth {
-  position: relative;
-  width: fit-content;
-  max-width: 100%;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+  min-width: 0;
 }
-
-.booth + .booth {
-  margin-left: clamp(-80px, -4vw, -24px);
+.booth_label{
+  font-size: clamp(0.8rem, 3vw, 1rem);
+  margin: 0 0 6px;
+  font-weight : 500;
 }
 
 .frame_canvas {
   display: block;
-  width: min(84vw, 640px);
-  height: auto;
-  max-height: calc(100svh - 118px);
-  object-fit: contain;
-  align-self: center;
+  height: 100%;        /* fill whatever height .frame_selected/.frame_stage actually has */
+  max-height: min(70vh, 640px);   /* keep your size preference as an upper bound */
+  width: auto;
+  max-width: 44vw;
+  border-radius: 8px;
 }
 
-.frame_stage button {
-  position: relative;
+.frame_selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  flex: 1;         /* take up whatever space is LEFT after the header */
+  min-height: 0;   /* critical — allows this to actually shrink instead of overflowing */
+}
+
+.frame_selected button {
   display:flex;
   gap:40px;
-  top: 50%;
-  transform: translateY(-50%);
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -277,22 +280,114 @@
   flex-shrink: 0;
 }
 
+.room_key {
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  margin: 0;
+}
+
 .app {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  justify-content: flex-start;
   min-height: 100svh;
-  padding: clamp(12px, 2vh, 20px) 20px 0;
+  padding: clamp(12px, 2vh, 20px) clamp(12px, 4vw, 20px) 16px;
+  gap : clamp(12px, 2vh, 20px);
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .app h1 {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   margin: 0 0 12px;
-  position: relative;
+  flex-shrink: 0;   /* never let the header get squeezed/overlapped */
 }
+
+
+.selection_screen{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+
+
+.join-form{
+  display : flex;
+  flex-direction : row;
+  justify-content : start;
+  align-items : start;
+  gap : 12px;
+}
+
+.join-form input {
+  padding: 8px 12px;
+  font-size: 16px;   /* 16px minimum avoids iOS auto-zoom-on-focus */
+  border-radius: 6px;
+  border: 2px solid #333;
+}
+
+.join-form button {
+  padding: 8px 12px;
+  font-size: 16px;
+  font-family : "Inter",cursive,sans-serif;
+  color: #000000;
+  border-radius: 6px;
+  border: 2px solid #333;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+
+/* Countdown timer styles */
+.countdown_button {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.countdown_button:disabled {
+  cursor: default;
+}
+
+.countdown_ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);   /* start the ring from 12 o'clock, not 3 o'clock */
+}
+
+.countdown_ring_bg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 4;
+}
+
+.countdown_ring_progress {
+  fill: none;
+  stroke: #ff7aa2;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;   /* smooths the jump each second into a continuous sweep */
+}
+
+.countdown_number {
+  position: relative;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
 
 

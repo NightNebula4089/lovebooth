@@ -2,6 +2,7 @@ import { useRef, useState ,useEffect} from 'react'
 import Booth from './Booth.jsx'
 import { db, servers } from '../Firebase.js'
 import { doc, getDoc, setDoc, collection, addDoc, onSnapshot, updateDoc } from 'firebase/firestore'
+import CountdownButton from './CountdownButton'
 
 const SLOT_WIDTH = 953;
 const SLOT_HEIGHT = 599;
@@ -308,10 +309,9 @@ function Frame({selectedFrame, onSelectFrame}){
             <div className="frame_stage">
                 <Booth ref={booth1Ref} selectedFrame={selectedFrame} stream = {hostStream} label="Frame_you" />
                 <Booth ref={booth2Ref} selectedFrame={selectedFrame} stream = {joineeStream} label="Frame_friend" />
-                <button type="button" onClick={handleCapture} aria-label="Capture both frames">
-                </button>
-                <h2 className='room_key'>Room key: {roomId}</h2>
             </div>
+            <CountdownButton onCapture ={handleCapture} duration= {5} />
+            <h2 className='room_key'>Room key: {roomId}</h2>
         </div>
     )
 
