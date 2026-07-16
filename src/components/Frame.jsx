@@ -17,6 +17,8 @@ const frameOptions = [
 function Frame({selectedFrame, onSelectFrame}){
 
     const booth1Ref = useRef(null);
+    const dataChannelRef = useRef(null);
+    const countdownRef = useRef(null);
     const [joineeStream, setJoineeStream] = useState(null);
     const [hostStream, setHostStream] = useState(null);
     const booth2Ref = useRef(null);
@@ -137,7 +139,8 @@ function Frame({selectedFrame, onSelectFrame}){
                 })
             })
 
-            pc.current.createDataChannel('rtc')
+            dataChannelRef.current = pc.current.createDataChannel('rtc')
+            dataChannelRef.current.onopen = () => console.log('Data channel open (host)')
 
             // get local media stream 
             // hostStream.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
@@ -208,6 +211,14 @@ function Frame({selectedFrame, onSelectFrame}){
         booth2Ref.current?.capturePhoto();
     }
 
+    const handleHostClick = () => {
+        if(mode != "host") return 
+        if(dataChannelRef.current && dataChannelRef.current.readyState === "open"){
+            dataChannelRef.current.send(JSON.stringify({type:"start-countdown"}))
+        }
+        countdownRef.current?.startCountdown()
+    }
+
     const handleJoinRoom = async() => {
         const roomIdInput = document.getElementById("key").value.trim();
         if(!roomIdInput){
@@ -242,6 +253,18 @@ function Frame({selectedFrame, onSelectFrame}){
                 }
             })
         })
+
+        pc.current.ondatachannel = event => {
+            dataChannelRef.current = event.channel
+            dataChannelRef.current.onopen = () => console.log('Data channel open (joinee)')
+            dataChannelRef.current.onmessage = (msg) => {
+                console.log('Received message from host:', msg.data)
+                const data = JSON.parse(msg.data)
+                if(data.type === "start-countdown"){
+                    countdownRef.current?.startCountdown()
+                }
+            }
+        }
 
         const roomRef = doc(db, "rooms",roomIdInput);
         const roomSnapshot = await getDoc(roomRef);
@@ -328,7 +351,7 @@ function Frame({selectedFrame, onSelectFrame}){
                 <Booth ref={booth1Ref} selectedFrame={selectedFrame} stream = {hostStream} label="Frame_you" />
                 <Booth ref={booth2Ref} selectedFrame={selectedFrame} stream = {joineeStream} label="Frame_friend" />
             </div>
-            <CountdownButton onCapture ={handleCapture} duration= {5} />
+            <CountdownButton onCapture ={handleCapture} duration= {5} mode={mode} onClickOverride={mode == "host"? handleHostClick : undefined}/>
             <h2 className='room_key'>Room key: {roomId}</h2>
         </div>
     )

@@ -1,9 +1,9 @@
-import { useState, useRef } from 'react'
+import {forwardRef, useImperativeHandle,useState, useRef } from 'react'
 
 const RADIUS = 36
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
-function CountdownButton({ onCapture, duration = 5 }) {
+const CountdownButton = forwardRef(({ onCapture, duration = 5,mode, onClickOverride}, ref) => {
   const [counting, setCounting] = useState(false)
   const [countValue, setCountValue] = useState(duration)
   const intervalRef = useRef(null)
@@ -29,35 +29,81 @@ function CountdownButton({ onCapture, duration = 5 }) {
   const progress = counting ? (duration - countValue) / duration : 0
   const dashOffset = CIRCUMFERENCE * progress
 
-  return (
-    <button
-      type="button"
-      className="countdown_button"
-      onClick={startCountdown}
-      disabled={counting}
-      aria-label="Start countdown and capture"
-    >
-      <svg viewBox="0 0 80 80" className="countdown_ring">
-        <circle
-          cx="40" cy="40" r={RADIUS}
-          className="countdown_ring_bg"
-        />
-        {counting && (
+  // function to display text "Countdown button disable, sit back and relax: when mode is joinee and joinee clicks on the button
+  const handlejoineeClick = () => {
+    if(mode != "joinee") return 
+    const countdownDisabledText = document.getElementById('countdown_disabled_text');
+
+  }
+
+  useImperativeHandle(ref, () => ({
+    startCountdown
+  }))
+
+  if (mode == 'host') {
+    return (
+      <button
+        type="button"
+        className="countdown_button"
+        onClick={mode == "host" ? (onClickOverride ?? startCoundown): undefined}
+        disabled={counting}
+        aria-label="Start countdown and capture"
+      >
+        <svg viewBox="0 0 80 80" className="countdown_ring">
           <circle
             cx="40" cy="40" r={RADIUS}
-            className="countdown_ring_progress"
-            style={{
-              strokeDasharray: CIRCUMFERENCE,
-              strokeDashoffset: dashOffset,
-            }}
+            className="countdown_ring_bg"
           />
-        )}
-      </svg>
-      <span className="countdown_number">
-        {counting ? countValue : '◎'}
-      </span>
-    </button>
-  )
-}
+          {counting && (
+            <circle
+              cx="40" cy="40" r={RADIUS}
+              className="countdown_ring_progress"
+              style={{
+                strokeDasharray: CIRCUMFERENCE,
+                strokeDashoffset: dashOffset,
+              }}
+            />
+          )}
+        </svg>
+        <span className="countdown_number">
+          {counting ? countValue : '◎'}
+        </span>
+      </button>
+    )
+  } else if (mode == "joinee"){
+        return (
+      <div className="countdown_button" aria-label="Countdown and capture disabled for host">
+      <button
+        type="button"
+        className="countdown_button"
+        onClick={() => {}}
+        disabled={counting}
+        aria-label="Start countdown and capture"
+      >
+        <svg viewBox="0 0 80 80" className="countdown_ring">
+          <circle
+            cx="40" cy="40" r={RADIUS}
+            className="countdown_ring_bg"
+          />
+          {counting && (
+            <circle
+              cx="40" cy="40" r={RADIUS}
+              className="countdown_ring_progress"
+              style={{
+                strokeDasharray: CIRCUMFERENCE,
+                strokeDashoffset: dashOffset,
+              }}
+            />
+          )}
+        </svg>
+        <span className="countdown_number">
+          {counting ? countValue : '◎'}
+        </span>
+      </button>
+      <h3 className="countdown_disabled_text" display= "none">Countdown disabled for you : sit back and relax ;</h3>
+      </div>
+    )
+  }
+})
 
 export default CountdownButton
