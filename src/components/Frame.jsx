@@ -125,6 +125,7 @@ function Frame({selectedFrame, onSelectFrame}){
                     const candidateRef = collection(db, "rooms", roomId, "offer_candidates");
                     addDoc(candidateRef, candidate);
                     console.log('Adding offer ICE candidate:', candidate);
+                    console.log('Candidate type:',event.candidate.type, 'Candidate protocol:', event.candidate.protocol, 'Candidate address:', event.candidate.address);
                 }
             }
 
@@ -262,6 +263,7 @@ function Frame({selectedFrame, onSelectFrame}){
                 const candidate = event.candidate.toJSON();
                 addDoc(answerCandidatesRef, candidate);
                 console.log('Adding answer ICE candidate:', candidate);
+                console.log('Candidate type:',event.candidate.type, 'Candidate protocol:', event.candidate.protocol, 'Candidate address:', event.candidate.address);
             }
         }
 
