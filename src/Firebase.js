@@ -14,27 +14,32 @@ const firebaseConfig = {
 
 const servers = {
   iceServers: [
-    {
-      urls: ["stun:stun.l.google.com:19302", "stun:stun2.l.google.com:19302"]
-    },
-    {
-      urls: 'turn:openrelay.metered.ca:80',
-      username: 'openrelayproject',
-      credential: 'openrelayproject',
-    },
-    {
-      urls: 'turn:openrelay.metered.ca:443',
-      username: 'openrelayproject',
-      credential: 'openrelayproject',
-    },
-    {
-      urls: 'turn:openrelay.metered.ca:443?transport=tcp',
-      username: 'openrelayproject',
-      credential: 'openrelayproject',
-    },
+      {urls : "stun:stun.l.google.com:19302"},
+      {
+        urls: "stun:stun.relay.metered.ca:80",
+      },
+      {
+        urls: "turn:global.relay.metered.ca:80",
+        username: "7528ad85749681a62f0b1694",
+        credential: "tGa2oxvVT7X/AcpG",
+      },
+      {
+        urls: "turn:global.relay.metered.ca:80?transport=tcp",
+        username: "7528ad85749681a62f0b1694",
+        credential: "tGa2oxvVT7X/AcpG",
+      },
+      {
+        urls: "turn:global.relay.metered.ca:443",
+        username: "7528ad85749681a62f0b1694",
+        credential: "tGa2oxvVT7X/AcpG",
+      },
+      {
+        urls: "turns:global.relay.metered.ca:443?transport=tcp",
+        username: "7528ad85749681a62f0b1694",
+        credential: "tGa2oxvVT7X/AcpG",
+      },
   ],
-  iceCandidatePoolSize: 10
-}
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
