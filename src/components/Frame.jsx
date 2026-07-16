@@ -128,6 +128,14 @@ function Frame({selectedFrame, onSelectFrame}){
                 }
             }
 
+            pc.current.getStats().then(stats => {
+                stats.forEach(report => {
+                if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+                    console.log('Connected via:', report)
+                }
+                })
+            })
+
             pc.current.createDataChannel('rtc')
 
             // get local media stream 
@@ -225,6 +233,14 @@ function Frame({selectedFrame, onSelectFrame}){
         pc.current.onsignalingstatechange = () => {
             console.log('Signaling state:', pc.current.signalingState)
         }
+
+        pc.current.getStats().then(stats => {
+            stats.forEach(report => {
+                if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+                    console.log('Connected via:', report)
+                }
+            })
+        })
 
         const roomRef = doc(db, "rooms",roomIdInput);
         const roomSnapshot = await getDoc(roomRef);
