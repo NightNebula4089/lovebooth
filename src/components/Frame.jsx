@@ -16,6 +16,7 @@ const frameOptions = [
 
 function Frame({selectedFrame, onSelectFrame}){
 
+    const [showDownload, setShowDownload] = useState(false)
     const booth1Ref = useRef(null);
     const captureCountRef = useRef(0);
     const dataChannelRef = useRef(null);
@@ -212,10 +213,7 @@ function Frame({selectedFrame, onSelectFrame}){
         booth1Ref.current?.capturePhoto();
         booth2Ref.current?.capturePhoto();
         if(captureCountRef.current == 3){
-            const downloadButton = document.querySelector('.download_button');
-            if(downloadButton){
-                downloadButton.style.display = 'block';
-            }
+            setShowDownload(true)
         }
         captureCountRef.current += 1;
     }
@@ -382,7 +380,7 @@ function Frame({selectedFrame, onSelectFrame}){
             <div className="frame_stage">
                 <Booth ref={booth1Ref} selectedFrame={selectedFrame} stream = {hostStream} label="Frame_you" />
                 <Booth ref={booth2Ref} selectedFrame={selectedFrame} stream = {joineeStream} label="Frame_friend" />
-                <button classname="download_button" onClick={handleDownload} style={{display: "none"}}>Download photo</button>
+                {showDownload && (<button className="download_button" onClick={handleDownload}>Download photo</button>)}
             </div>
             <CountdownButton ref={countdownRef} onCapture ={handleCapture} duration= {5} mode={mode} onClickOverride={mode == "host"? handleHostClick : undefined}/>
             <h2 className='room_key'>Room key: {roomId}</h2>
