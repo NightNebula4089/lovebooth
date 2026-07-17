@@ -351,7 +351,7 @@ function Frame({selectedFrame, onSelectFrame}){
                 <Booth ref={booth1Ref} selectedFrame={selectedFrame} stream = {hostStream} label="Frame_you" />
                 <Booth ref={booth2Ref} selectedFrame={selectedFrame} stream = {joineeStream} label="Frame_friend" />
             </div>
-            <CountdownButton onCapture ={handleCapture} duration= {5} mode={mode} onClickOverride={mode == "host"? handleHostClick : undefined}/>
+            <CountdownButton ref={countdownButtonRef} onCapture ={handleCapture} duration= {5} mode={mode} onClickOverride={mode == "host"? handleHostClick : undefined}/>
             <h2 className='room_key'>Room key: {roomId}</h2>
         </div>
     )
