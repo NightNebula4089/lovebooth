@@ -17,7 +17,7 @@ const frameOptions = [
 function Frame({selectedFrame, onSelectFrame}){
 
     const booth1Ref = useRef(null);
-    const caputreCountRef = useRef(0);
+    const captureCountRef = useRef(0);
     const dataChannelRef = useRef(null);
     const countdownRef = useRef(null);
     const [joineeStream, setJoineeStream] = useState(null);
