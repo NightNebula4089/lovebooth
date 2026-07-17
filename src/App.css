@@ -267,19 +267,6 @@
   min-height: 0;   /* critical — allows this to actually shrink instead of overflowing */
 }
 
-.frame_selected button {
-  display:flex;
-  gap:40px;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid #333;
-  background: white;
-  cursor: pointer;
-  font-size: 14px;
-  flex-shrink: 0;
-}
-
 .frame_selected h2 {
   font-family: "Inter", cursive, sans-serif;
   font-size: clamp(2rem, 4vw, 1.5rem);
