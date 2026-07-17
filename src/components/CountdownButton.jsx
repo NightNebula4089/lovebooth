@@ -49,7 +49,7 @@ const CountdownButton = forwardRef(({ onCapture, duration = 5,mode, onClickOverr
       <button
         type="button"
         className="countdown_button"
-        onClick={mode == "host" ? (onClickOverride ?? startCountdown): undefined}
+        onClick={mode == "host" ? (onClickOverride ?? startCountdown): handlejoineeClick}
         disabled={counting}
         aria-label="Start countdown and capture"
       >

@@ -149,7 +149,8 @@ const Booth = forwardRef(({stream, selectedFrame, label }, ref) => {
     }
 
     useImperativeHandle(ref, () => ({
-        capturePhoto
+        capturePhoto,
+        getCanvas : () => canvasRef.current
     }))
 
     return (

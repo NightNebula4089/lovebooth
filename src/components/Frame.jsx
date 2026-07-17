@@ -17,6 +17,7 @@ const frameOptions = [
 function Frame({selectedFrame, onSelectFrame}){
 
     const booth1Ref = useRef(null);
+    const caputreCountRef = useRef(0);
     const dataChannelRef = useRef(null);
     const countdownRef = useRef(null);
     const [joineeStream, setJoineeStream] = useState(null);
@@ -207,8 +208,16 @@ function Frame({selectedFrame, onSelectFrame}){
     },[selectedFrame])
 
     const handleCapture = () => {
+        if(captureCountRef.current >= 4) return
         booth1Ref.current?.capturePhoto();
         booth2Ref.current?.capturePhoto();
+        if(captureCountRef.current == 3){
+            const downloadButton = document.querySelector('.download_button');
+            if(downloadButton){
+                downloadButton.style.display = 'block';
+            }
+        }
+        captureCountRef.current += 1;
     }
 
     const handleHostClick = () => {
@@ -326,6 +335,29 @@ function Frame({selectedFrame, onSelectFrame}){
         setMode("host")
         onSelectFrame(frame)
     }
+
+    //handle download button click 
+    const handleDownload = () => {
+        const canvas1 = booth1Ref.current?.getCanvas();
+        const canvas2 = booth2Ref.current?.getCanvas();
+        if(!canvas1 || !canvas2) {
+            console.log("Canvas not ready for download.");
+            return;
+        }
+
+        const combinedCanvas = document.createElement('canvas');
+        combinedCanvas.width = canvas1.width + canvas2.width;
+        combinedCanvas.height = Math.max(canvas1.height, canvas2.height);
+        const ctx = combinedCanvas.getContext('2d');
+
+        ctx.drawImage(canvas1, 0, 0);
+        ctx.drawImage(canvas2, canvas1.width, 0);
+
+        const link = document.createElement('a');
+        link.href = combinedCanvas.toDataURL('image/png');
+        link.download = 'combined_image.png';
+        link.click();
+    }
    
     if(!selectedFrame){
         return(
@@ -350,6 +382,7 @@ function Frame({selectedFrame, onSelectFrame}){
             <div className="frame_stage">
                 <Booth ref={booth1Ref} selectedFrame={selectedFrame} stream = {hostStream} label="Frame_you" />
                 <Booth ref={booth2Ref} selectedFrame={selectedFrame} stream = {joineeStream} label="Frame_friend" />
+                <button classname="download_button" onClick={handleDownload} style={{display: "none"}}>Download photo</button>
             </div>
             <CountdownButton ref={countdownRef} onCapture ={handleCapture} duration= {5} mode={mode} onClickOverride={mode == "host"? handleHostClick : undefined}/>
             <h2 className='room_key'>Room key: {roomId}</h2>
