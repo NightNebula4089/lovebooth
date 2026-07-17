@@ -4,6 +4,8 @@ const RADIUS = 36
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 const CountdownButton = forwardRef(({ onCapture, duration = 5,mode, onClickOverride}, ref) => {
+  const [showHint, setShowHint] = useState(false)
+  const hintTimeoutRef = useRef(null)
   const [counting, setCounting] = useState(false)
   const [countValue, setCountValue] = useState(duration)
   const intervalRef = useRef(null)
@@ -31,9 +33,11 @@ const CountdownButton = forwardRef(({ onCapture, duration = 5,mode, onClickOverr
 
   // function to display text "Countdown button disable, sit back and relax: when mode is joinee and joinee clicks on the button
   const handlejoineeClick = () => {
-    if(mode != "joinee") return 
-    const countdownDisabledText = document.getElementById('countdown_disabled_text');
-
+    setShowHint(true)
+    clearTimeout(hintTimeoutRef.current)
+    hintTimeoutRef.current = setTimeout(() => {
+      setShowHint(false)
+    }, 2000)
   }
 
   useImperativeHandle(ref, () => ({
@@ -45,7 +49,7 @@ const CountdownButton = forwardRef(({ onCapture, duration = 5,mode, onClickOverr
       <button
         type="button"
         className="countdown_button"
-        onClick={mode == "host" ? (onClickOverride ?? startCoundown): undefined}
+        onClick={mode == "host" ? (onClickOverride ?? startCountdown): undefined}
         disabled={counting}
         aria-label="Start countdown and capture"
       >
@@ -70,7 +74,7 @@ const CountdownButton = forwardRef(({ onCapture, duration = 5,mode, onClickOverr
         </span>
       </button>
     )
-  } else if (mode == "joinee"){
+  } else if (mode == "join"){
         return (
       <div className="countdown_button" aria-label="Countdown and capture disabled for host">
       <button
@@ -100,9 +104,11 @@ const CountdownButton = forwardRef(({ onCapture, duration = 5,mode, onClickOverr
           {counting ? countValue : '◎'}
         </span>
       </button>
-      <h3 className="countdown_disabled_text" display= "none">Countdown disabled for you : sit back and relax ;</h3>
+      <h3 className="countdown_disabled_text" style = {{display: "none"}}>Countdown disabled for you : sit back and relax ;</h3>
       </div>
     )
+  } else {
+    return null
   }
 })
 
