@@ -382,7 +382,27 @@ function Frame({selectedFrame, onSelectFrame}){
                 <Booth ref={booth2Ref} selectedFrame={selectedFrame} stream = {joineeStream} label="Frame_friend" />
                 {showDownload && (<button className="download_button" onClick={handleDownload}>Download photo</button>)}
             </div>
-            <CountdownButton ref={countdownRef} onCapture ={handleCapture} duration= {5} mode={mode} onClickOverride={mode == "host"? handleHostClick : undefined}/>
+            {showDownload ? (
+            <button
+                type="button"
+                className="download_button"
+                onClick={handleDownload}
+                aria-label="Download your photo strip"
+            >
+                <svg viewBox="0 0 24 24" className="download_icon" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3a1 1 0 001 1h14a1 1 0 001-1v-3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>Download</span>
+            </button>
+        ) : (
+            <CountdownButton
+                ref={countdownRef}
+                onCapture={handleCapture}
+                duration={5}
+                mode={mode}
+                onClickOverride={mode == "host" ? handleHostClick : undefined}
+            />
+        )}
             <h2 className='room_key'>Room key: {roomId}</h2>
         </div>
     )
