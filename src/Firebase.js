@@ -14,30 +14,28 @@ const firebaseConfig = {
 
 const servers = {
   iceServers: [
-      {urls : "stun:stun.l.google.com:19302"},
-      {
-        urls: "stun:stun.relay.metered.ca:80",
-      },
-      {
-        urls: "turn:global.relay.metered.ca:80",
-        username: "7528ad85749681a62f0b1694",
-        credential: "tGa2oxvVT7X/AcpG",
-      },
-      {
-        urls: "turn:global.relay.metered.ca:80?transport=tcp",
-        username: "7528ad85749681a62f0b1694",
-        credential: "tGa2oxvVT7X/AcpG",
-      },
-      {
-        urls: "turn:global.relay.metered.ca:443",
-        username: "7528ad85749681a62f0b1694",
-        credential: "tGa2oxvVT7X/AcpG",
-      },
-      {
-        urls: "turns:global.relay.metered.ca:443?transport=tcp",
-        username: "7528ad85749681a62f0b1694",
-        credential: "tGa2oxvVT7X/AcpG",
-      },
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun.relay.metered.ca:80" },
+    {
+      urls: "turn:standard.relay.metered.ca:80",
+      username: "7528ad85749681a62f0b1694",
+      credential: "tGa2oxvVT7X/AcpG",
+    },
+    {
+      urls: "turn:standard.relay.metered.ca:80?transport=tcp",
+      username: "7528ad85749681a62f0b1694",
+      credential: "tGa2oxvVT7X/AcpG",
+    },
+    {
+      urls: "turn:standard.relay.metered.ca:443",
+      username: "7528ad85749681a62f0b1694",
+      credential: "tGa2oxvVT7X/AcpG",
+    },
+    {
+      urls: "turns:standard.relay.metered.ca:443?transport=tcp",
+      username: "7528ad85749681a62f0b1694",
+      credential: "tGa2oxvVT7X/AcpG",
+    },
   ],
 };
 
